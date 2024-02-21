@@ -48,11 +48,12 @@ void free_tabs(t_pipex* pipex)
 		free(pipex->command_paths[i]);
 		i++;
 	}
+	free(pipex);
 }
 
 void error_handling(char *err_msg, t_pipex* pipex)
 {
-	ft_putstr_fd(err_msg, 2);
+	perror(err_msg);
 	free_tabs(pipex);
 	exit(-1);
 }
@@ -63,18 +64,12 @@ int child_process(t_pipex* pipex, char* cmd[], char *command_path, char* infile)
 
 	infile_fd = open(infile, O_RDONLY,0666);
 	if (infile_fd == -1)
-	{
-		perror("input file error: ");
-		return (-1);
-	}
+		error_handling("input file error: ", pipex);
 	dup2(pipex->end[1],1);
 	close(pipex->end[0]);
 	dup2(infile_fd,0);
 	if (execve(command_path,cmd,NULL) == -1)
-	{
-		perror("command error: ");
-		return (-1);
-	}
+		error_handling("command error: ", pipex);
 }
 
 int parent_process(t_pipex* pipex, char* cmd[], char *command_path, char* outfile)
@@ -84,10 +79,7 @@ int parent_process(t_pipex* pipex, char* cmd[], char *command_path, char* outfil
 
 	outfile_fd = open(outfile, O_WRONLY | O_CREAT,0777);
 	if (outfile_fd == -1)
-	{
-		perror("output file error:");
-		return -1;
-	}
+		error_handling("outfile error: ", pipex);
 	dup2(pipex->end[0],0);
 	close(pipex->end[1]);
 	dup2(outfile_fd,1);
