@@ -57,7 +57,7 @@ void error_handling(char *err_msg, t_pipex* pipex)
 	exit(-1);
 }
 
-int child_process(int end[2], char* cmd[], char *command_path, char* infile) //AKA FIRST COMMAND
+int child_process(t_pipex* pipex, char* cmd[], char *command_path, char* infile) //AKA FIRST COMMAND
 {
 	int infile_fd;
 
@@ -67,8 +67,8 @@ int child_process(int end[2], char* cmd[], char *command_path, char* infile) //A
 		perror("input file error: ");
 		return (-1);
 	}
-	dup2(end[1],1);
-	close(end[0]);
+	dup2(pipex->end[1],1);
+	close(pipex->end[0]);
 	dup2(infile_fd,0);
 	if (execve(command_path,cmd,NULL) == -1)
 	{
@@ -77,7 +77,7 @@ int child_process(int end[2], char* cmd[], char *command_path, char* infile) //A
 	}
 }
 
-int parent_process(t_pipex* pipex, char* outfile)
+int parent_process(t_pipex* pipex, char* cmd[], char *command_path, char* outfile)
 {
 	int outfile_fd;
 	int exec_value;
@@ -88,11 +88,11 @@ int parent_process(t_pipex* pipex, char* outfile)
 		perror("output file error:");
 		return -1;
 	}
-	dup2(end[0],0);
-	close(end[1]);
+	dup2(pipex->end[0],0);
+	close(pipex->end[1]);
 	dup2(outfile_fd,1);
 	if(execve(command_path, cmd, NULL) == -1)
-		error_handling("command not executed",pipex);
+		error_handling("command not executed", pipex);
 }
 
 char **cmd_parser(char *cmd_arg)
@@ -118,13 +118,12 @@ int main(int ac, char *av[], char **env)
 	pipex->command_paths[0] = ft_strjoin(pipex->path,pipex->commands[0][0]);
 	pipex->command_paths[1] = ft_strjoin(pipex->path,pipex->commands[1][0]);
 	if (!pipex->commands[0] ||!pipex->commands[1] || !pipex->command_paths[0] || !pipex->command_paths[1])
-		error_handling("malloc error". pipex);
-	error_handling(pipex);
+		error_handling("malloc error", pipex);
 	if (proc == 0)
-		child_process(pipex->end,pipex->commands[0],pipex->command_paths[0],av[1]);
+		child_process(pipex,pipex->commands[0],pipex->command_paths[0],av[1]);
 	else if (proc != 0)
 	{
 		wait(&proc);
-		parent_process(pipex->end,pipex->commands[1],pipex->command_paths[1],av[ac-1]);
+		parent_process(pipex,pipex->commands[1],pipex->command_paths[1],av[ac-1]);
 	}
 }
