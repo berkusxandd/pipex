@@ -6,7 +6,7 @@
 /*   By: bince < bince@student.42.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 18:17:50 by bince             #+#    #+#             */
-/*   Updated: 2024/02/21 18:17:51 by bince            ###   ########.fr       */
+/*   Updated: 2024/02/27 16:13:35 by bince            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,8 @@
 
 typedef struct s_pipex
 {
-	char	**commands[2];
-	char	*command_paths[2];
+	char	**cmds[2];
+	char	*cmd_paths[2];
 	char	*path;
 	int		outfile_fd;
 	int		infile_fd;

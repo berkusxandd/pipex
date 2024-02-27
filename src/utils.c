@@ -6,7 +6,7 @@
 /*   By: bince < bince@student.42.fr>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/21 18:17:47 by bince             #+#    #+#             */
-/*   Updated: 2024/02/21 18:17:48 by bince            ###   ########.fr       */
+/*   Updated: 2024/02/27 16:16:46 by bince            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,21 +19,21 @@ void	free_tabs(t_pipex *pipex)
 
 	i = 0;
 	j = 0;
-	while (i < 2 && pipex->commands[i])
+	while (i < 2 && pipex->cmds[i])
 	{
 		j = 0;
-		while (pipex->commands[i][j])
+		while (pipex->cmds[i][j])
 		{
-			free(pipex->commands[i][j]);
+			free(pipex->cmds[i][j]);
 			j++;
 		}
-		free(pipex->commands[i]);
+		free(pipex->cmds[i]);
 		i++;
 	}
 	i = 0;
-	while (i < 2 && pipex->command_paths[i])
+	while (i < 2 && pipex->cmd_paths[i])
 	{
-		free(pipex->command_paths[i]);
+		free(pipex->cmd_paths[i]);
 		i++;
 	}
 	free(pipex);
