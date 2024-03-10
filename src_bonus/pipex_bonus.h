@@ -11,8 +11,7 @@ typedef struct s_pipex_b
 	char	***commands;
 	char	**command_paths;
 	char	*path;
-	int		outfile_fd;
-	int		infile_fd;
+	int 	fds[2];
 }			t_pipex_b;
 
 void		free_tabs(t_pipex_b *pipex);
